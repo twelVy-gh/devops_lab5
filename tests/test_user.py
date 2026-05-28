@@ -3,7 +3,6 @@ from src.main import app
 
 client = TestClient(app)
 
-# Существующие пользователи (из fake_db)
 users = [
     {
         'id': 1,
@@ -66,7 +65,6 @@ def test_create_user_with_invalid_email():
 
 def test_delete_user():
     '''Удаление пользователя'''
-    # Сначала создаём пользователя для удаления
     new_user = {
         'name': 'To Delete',
         'email': 'todelete@example.com'
@@ -74,11 +72,9 @@ def test_delete_user():
     create_response = client.post("/api/v1/user", json=new_user)
     assert create_response.status_code == 201
 
-    # Удаляем пользователя по email
     delete_response = client.delete("/api/v1/user", params={'email': new_user['email']})
     assert delete_response.status_code == 204
     assert delete_response.text == ''  # Нет тела ответа
 
-    # Проверяем, что пользователь действительно удалён
     get_response = client.get("/api/v1/user", params={'email': new_user['email']})
     assert get_response.status_code == 404
